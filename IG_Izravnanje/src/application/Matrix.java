@@ -127,16 +127,8 @@ public class Matrix {
 	
 	public Matrix getDiagonal() {
 		double m[][] = new double[this.getNumberOfRows()][1];
-		try {
-			for(int i = 0; i < this.getNumberOfRows(); i++) {
-				for(int j = 0; j < this.getNumberOfColumns(); j++) {
-					if(i == j) {
-						m[i][j] = matrix[i][j];
-					}
-				}
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
+		for(int i = 0; i < this.getNumberOfColumns(); i++) {
+			m[i][0] = matrix[i][i];
 		}
 		
 		return new Matrix(m);

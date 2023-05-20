@@ -2,11 +2,13 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="899.0" prefWidth="1166.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
@@ -27,8 +29,8 @@
                         <Label layoutX="14.0" layoutY="184.0" prefHeight="21.0" prefWidth="83.0" text="Broj stanica:" />
                         <TextField fx:id="txt_duzinaStrane" layoutX="227.0" layoutY="137.0" />
                         <TextField fx:id="txt_brojStanica" layoutX="97.0" layoutY="179.0" />
-                        <Button layoutX="9.0" layoutY="216.0" mnemonicParsing="false" onAction="#popuniTabeluVr" prefHeight="53.0" prefWidth="266.0" text=" DODAJ VISINSKU RAZLIKU" />
-                        <TableView fx:id="tabela_vr" layoutX="1.0" layoutY="274.0" prefHeight="585.0" prefWidth="716.0">
+                        <Button layoutX="1.0" layoutY="269.0" mnemonicParsing="false" onAction="#popuniTabeluVr" prefHeight="53.0" prefWidth="266.0" text=" DODAJ VISINSKU RAZLIKU" />
+                        <TableView fx:id="tabela_vr" layoutX="1.0" layoutY="329.0" prefHeight="530.0" prefWidth="716.0">
                           <columns>
                             <TableColumn fx:id="OD" prefWidth="67.0" text="OD" />
                             <TableColumn fx:id="DO" prefWidth="64.0" text="DO" />
@@ -37,20 +39,28 @@
                               <TableColumn fx:id="BROJ_STANICA" prefWidth="131.0" text="BROJ STANICA" />
                           </columns>
                         </TableView>
-                        <Button layoutX="281.0" layoutY="216.0" mnemonicParsing="false" onAction="#izravnaj" prefHeight="53.0" prefWidth="266.0" text="IZRAVNAJ" />
-                        <TableView fx:id="tabela_v" layoutX="717.0" layoutY="274.0" prefHeight="585.0" prefWidth="448.0">
+                        <Button layoutX="273.0" layoutY="269.0" mnemonicParsing="false" onAction="#izravnaj" prefHeight="53.0" prefWidth="266.0" text="IZRAVNAJ" />
+                        <TableView fx:id="tabela_v" layoutX="717.0" layoutY="329.0" prefHeight="530.0" prefWidth="448.0">
                           <columns>
                             <TableColumn fx:id="OZNAKA" prefWidth="86.0" text="OZNAKA" />
                             <TableColumn fx:id="VISINA" prefWidth="110.0" text="VISINA [m]" />
                           </columns>
                         </TableView>
-                        <TextField fx:id="txt_oznaka" layoutX="770.0" layoutY="127.0" />
-                        <Label layoutX="717.0" layoutY="132.0" text="Oznaka:" />
-                        <TextField fx:id="txt_visina" layoutX="782.0" layoutY="168.0" />
-                        <Label layoutX="717.0" layoutY="173.0" text="Visina[m]:" />
-                        <Button layoutX="717.0" layoutY="216.0" mnemonicParsing="false" onAction="#popuniTabeluV" prefHeight="53.0" prefWidth="266.0" text="DODAJ VISINU" />
-                        <Label layoutX="450.0" layoutY="21.0" text="s0:" />
-                        <TextField fx:id="txt_s0" layoutX="468.0" layoutY="16.0" />
+                        <TextField fx:id="txt_oznaka" layoutX="770.0" layoutY="182.0" />
+                        <Label layoutX="717.0" layoutY="187.0" text="Oznaka:" />
+                        <TextField fx:id="txt_visina" layoutX="782.0" layoutY="223.0" />
+                        <Label layoutX="717.0" layoutY="228.0" text="Visina[m]:" />
+                        <Button layoutX="717.0" layoutY="269.0" mnemonicParsing="false" onAction="#popuniTabeluV" prefHeight="53.0" prefWidth="266.0" text="DODAJ VISINU" />
+                        <Label layoutX="16.0" layoutY="232.0" text="s0:" />
+                        <RadioButton fx:id="radio_klasicno" layoutX="1024.0" layoutY="35.0" mnemonicParsing="false" text="Klasično">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="radio" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="radio_minimalanTrag" layoutX="1024.0" layoutY="65.0" mnemonicParsing="false" text="Minimalan trag" toggleGroup="$radio" />
+                        <Label layoutX="1024.0" layoutY="9.0" prefHeight="21.0" prefWidth="128.0" text="Vrsta izravnanja:" />
+                        <TextField fx:id="txt_s0" layoutX="36.0" layoutY="227.0" />
+                        <RadioButton fx:id="datum1d" layoutX="969.0" layoutY="184.0" mnemonicParsing="false" text="Definise datum" />
                      </children>
                   </AnchorPane>
             </content>

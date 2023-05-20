@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -23,6 +24,13 @@ public class MainController {
 	private ObservableList<Visina> data_v = FXCollections.observableArrayList();
 	private Visina visina;
 	private VisinskaRazlika visinskaRazlika;
+	
+	@FXML
+	private RadioButton radio_klasicno;
+	@FXML
+	private RadioButton radio_minimalanTrag;
+	@FXML
+	private RadioButton datum1d;
 	
 	@FXML
 	private Label myLabel;
@@ -81,7 +89,12 @@ public class MainController {
 	public void popuniTabeluV(ActionEvent event) {
 		OZNAKA.setCellValueFactory(new PropertyValueFactory<>("oznaka"));
 		VISINA.setCellValueFactory(new PropertyValueFactory<>("visina"));
-		visina = new Visina(txt_oznaka.getText(), txt_visina.getText());
+		if(datum1d.isSelected()) {
+			visina = new Visina(txt_oznaka.getText(), txt_visina.getText(), true);
+		}
+		if(!datum1d.isSelected()) {
+			visina = new Visina(txt_oznaka.getText(), txt_visina.getText(), false);
+		}
 		data_v.add(visina);
 		tabela_v.setItems(data_v);
 		tabela_v.refresh();
@@ -89,7 +102,13 @@ public class MainController {
 	
 	public void izravnaj(ActionEvent e) {
 		MinimalniTrag1D mt = new MinimalniTrag1D(data_v, data_vr, Double.parseDouble(txt_s0.getText()));
-		mt.napraviIzvjestaj();
+		KlasicanNacin1D kn = new KlasicanNacin1D(data_v, data_vr, Double.parseDouble(txt_s0.getText()));
+		if(radio_klasicno.isSelected()) {
+			kn.napraviIzvjestaj();
+		}
+		if(radio_minimalanTrag.isSelected()) {
+			mt.napraviIzvjestaj();
+		}
 	}
 
 }
