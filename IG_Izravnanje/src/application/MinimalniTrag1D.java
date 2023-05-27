@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.FileChooser;
 
 public class MinimalniTrag1D {
 
@@ -87,45 +88,105 @@ public class MinimalniTrag1D {
 		int prva = niz_v.length;
 		int druga = niz_x.length;
 
-		File izvjestaj = new File("/Users/kantarion/Desktop/izvjestaj.txt");
-		try {
-			FileWriter fw = new FileWriter(izvjestaj);
-			String jed = new String("============================================================");
-			fw.write(jed);
-			fw.write("\nДатум дефинишу сљедеће тачке");
-			fw.write("\nБР. ТАЧ. H[m]");
-			// fw.write("\n"+visine.get(prva).getOznaka()+" "+visine.get(prva).getVisina());
-			fw.write("\nУкупан број тачака које одређују датум је  ?");
-			fw.write("\nБрој мјерених величина је n=" + visinske_razlike.size());
-			fw.write("\nБрој непознатих параметара је ?");
-			fw.write("\nсигма априори=1000  ?");
-			fw.write("\nсигма = "+s0+"\n");
-			fw.write(jed);
-			fw.write("\nОцјене добијене из изравнања и кретеријуми квалитета и тачности\n");
-			fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s %10s", "OD", "DO", "V[mm]", "Qvii[mm2]", "loc[m]",
-					"Qlii[mm2]", "rii", "u-v"));
-			for (int i = 0; i < prva; i++) {
-				fw.write("\n");
-				fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s",
-				visinske_razlike.get(i).getOd(),
-				visinske_razlike.get(i).getDo(), df.format(niz_v[i][0]),
-				df.format(niz_Qvv[i][0]), df.format(niz_loc[i][0]),df.format(niz_Qll[i][0]),
-				df.format(niz_rii[i][0])));
+		FileChooser fileChooser = new FileChooser();
+
+		FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+		fileChooser.getExtensionFilters().add(extensionFilter);
+
+		File file = fileChooser.showSaveDialog(null);
+
+		if (file != null) {
+			try {
+				FileWriter fw = new FileWriter(file);
+				String jed = new String("============================================================");
+				fw.write(jed);
+				fw.write("\nДатум дефинишу сљедеће тачке");
+				fw.write("\nБР. ТАЧ. H[m]");
+				// fw.write("\n"+visine.get(prva).getOznaka()+" "+visine.get(prva).getVisina());
+				fw.write("\nУкупан број тачака које одређују датум је  ?");
+				fw.write("\nБрој мјерених величина је n=" + visinske_razlike.size());
+				fw.write("\nБрој непознатих параметара је ?");
+				fw.write("\nсигма априори=1000  ?");
+				fw.write("\nсигма = " + s0 + "\n");
+				fw.write(jed);
+				fw.write("\nОцјене добијене из изравнања и кретеријуми квалитета и тачности\n");
+				fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s %10s", "OD", "DO", "V[mm]", "Qvii[mm2]",
+						"loc[m]",
+						"Qlii[mm2]", "rii", "u-v"));
+				for (int i = 0; i < prva; i++) {
+					fw.write("\n");
+					fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s",
+							visinske_razlike.get(i).getOd(),
+							visinske_razlike.get(i).getDo(), df.format(niz_v[i][0]),
+							df.format(niz_Qvv[i][0]), df.format(niz_loc[i][0]), df.format(niz_Qll[i][0]),
+							df.format(niz_rii[i][0])));
+				}
+				fw.write("\n" + jed + "\nУсвојени ниво значајности је:0,05\n" + "Глобални тест адекватности модела \n"
+						+ "Вриједност теста нулте хипотезе је:1.2341\n" + "Дозвољена вриједност јеч: 3.0798\n"
+						+ "Сумаrii=10,0000\n" + jed + " \n" + "ОЦЈЕНЕ НЕПОЗНАТИХ ПАРАМЕТАРА СА ОЦЈЕНОМ ТАЧНОСТИ \n"
+						+ "");
+				fw.write(String.format("%1s %10s %10s %12s", "Бр.тачке", "x[mm]", "X[m]", "mx[mm]"));
+				for (int i = 0; i < druga; i++) {
+					fw.write("\n");
+					fw.write(String.format("%1s %10s %10s %12s", visine.get(i).getOznaka(), df.format(niz_x[i][0]),
+							df.format(niz_ocjenjeneVisine[i][0]), df.format(niz_standardnoOdstupanjeVisina[i][0])));
+				}
+				fw.close();
+			} catch (IOException e) {
+				System.out.println("ne ide");
+				e.printStackTrace();
 			}
-			fw.write("\n" + jed + "\nУсвојени ниво значајности је:0,05\n" + "Глобални тест адекватности модела \n"
-					+ "Вриједност теста нулте хипотезе је:1.2341\n" + "Дозвољена вриједност јеч: 3.0798\n"
-					+ "Сумаrii=10,0000\n" + jed + " \n" + "ОЦЈЕНЕ НЕПОЗНАТИХ ПАРАМЕТАРА СА ОЦЈЕНОМ ТАЧНОСТИ \n" + "");
-			fw.write(String.format("%1s %10s %10s %12s", "Бр.тачке", "x[mm]", "X[m]", "mx[mm]"));
-			for (int i = 0; i < druga; i++) {
-				fw.write("\n");
-				fw.write(String.format("%1s %10s %10s %12s", visine.get(i).getOznaka(), df.format(niz_x[i][0]),
-						df.format(niz_ocjenjeneVisine[i][0]), df.format(niz_standardnoOdstupanjeVisina[i][0])));
-			}
-			fw.close();
-		} catch (IOException e) {
-			System.out.println("ne ide");
-			e.printStackTrace();
 		}
+
+		File izvjestaj = new File("/Users/kantarion/Desktop/izvjestaj.txt");
+		// try {
+		// FileWriter fw = new FileWriter(izvjestaj);
+		// String jed = new
+		// String("============================================================");
+		// fw.write(jed);
+		// fw.write("\nДатум дефинишу сљедеће тачке");
+		// fw.write("\nБР. ТАЧ. H[m]");
+		// // fw.write("\n"+visine.get(prva).getOznaka()+"
+		// "+visine.get(prva).getVisina());
+		// fw.write("\nУкупан број тачака које одређују датум је ?");
+		// fw.write("\nБрој мјерених величина је n=" + visinske_razlike.size());
+		// fw.write("\nБрој непознатих параметара је ?");
+		// fw.write("\nсигма априори=1000 ?");
+		// fw.write("\nсигма = "+s0+"\n");
+		// fw.write(jed);
+		// fw.write("\nОцјене добијене из изравнања и кретеријуми квалитета и
+		// тачности\n");
+		// fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s %10s", "OD", "DO",
+		// "V[mm]", "Qvii[mm2]", "loc[m]",
+		// "Qlii[mm2]", "rii", "u-v"));
+		// for (int i = 0; i < prva; i++) {
+		// fw.write("\n");
+		// fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s",
+		// visinske_razlike.get(i).getOd(),
+		// visinske_razlike.get(i).getDo(), df.format(niz_v[i][0]),
+		// df.format(niz_Qvv[i][0]), df.format(niz_loc[i][0]),df.format(niz_Qll[i][0]),
+		// df.format(niz_rii[i][0])));
+		// }
+		// fw.write("\n" + jed + "\nУсвојени ниво значајности је:0,05\n" + "Глобални
+		// тест адекватности модела \n"
+		// + "Вриједност теста нулте хипотезе је:1.2341\n" + "Дозвољена вриједност јеч:
+		// 3.0798\n"
+		// + "Сумаrii=10,0000\n" + jed + " \n" + "ОЦЈЕНЕ НЕПОЗНАТИХ ПАРАМЕТАРА СА
+		// ОЦЈЕНОМ ТАЧНОСТИ \n" + "");
+		// fw.write(String.format("%1s %10s %10s %12s", "Бр.тачке", "x[mm]", "X[m]",
+		// "mx[mm]"));
+		// for (int i = 0; i < druga; i++) {
+		// fw.write("\n");
+		// fw.write(String.format("%1s %10s %10s %12s", visine.get(i).getOznaka(),
+		// df.format(niz_x[i][0]),
+		// df.format(niz_ocjenjeneVisine[i][0]),
+		// df.format(niz_standardnoOdstupanjeVisina[i][0])));
+		// }
+		// fw.close();
+		// } catch (IOException e) {
+		// System.out.println("ne ide");
+		// e.printStackTrace();
+		// }
 
 		if (!Desktop.isDesktopSupported()) {
 			System.out.println("Desktop is not supported");
@@ -149,6 +210,7 @@ public class MinimalniTrag1D {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 
 	}
 
