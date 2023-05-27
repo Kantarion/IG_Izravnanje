@@ -30,7 +30,7 @@ public class Matrix {
 
 		return new Matrix(m);
 	}
-	
+
 	public Matrix subtract(Matrix matrix) {
 		double m[][] = new double[matrix.getNumberOfRows()][matrix.getNumberOfColumns()];
 		for (int i = 0; i < matrix.getNumberOfRows(); i++) {
@@ -52,43 +52,43 @@ public class Matrix {
 			}
 
 		}
-		
+
 		return new Matrix(m);
 
 	}
-	
+
 	public Matrix transpose() {
 		double m[][] = new double[this.getNumberOfColumns()][this.getNumberOfRows()];
-		for(int i = 0; i < this.getNumberOfRows(); i++) {
-			for(int j = 0; j < this.getNumberOfColumns(); j++) {
+		for (int i = 0; i < this.getNumberOfRows(); i++) {
+			for (int j = 0; j < this.getNumberOfColumns(); j++) {
 				m[j][i] = matrix[i][j];
 			}
 		}
-		
+
 		return new Matrix(m);
 	}
-	
+
 	public Matrix inverse() {
 		double inverse[][] = new double[this.getNumberOfRows()][this.getNumberOfColumns()];
 		// minors and cofactors
-				for (int i = 0; i < matrix.length; i++)
-					for (int j = 0; j < matrix[i].length; j++)
-						inverse[i][j] = Math.pow(-1, i + j)
-								* determinant(minor(matrix, i, j));
+		for (int i = 0; i < matrix.length; i++)
+			for (int j = 0; j < matrix[i].length; j++)
+				inverse[i][j] = Math.pow(-1, i + j)
+						* determinant(minor(matrix, i, j));
 
-				// adjugate and determinant
-				double det = 1.0 / determinant(matrix);
-				for (int i = 0; i < inverse.length; i++) {
-					for (int j = 0; j <= i; j++) {
-						double temp = inverse[i][j];
-						inverse[i][j] = inverse[j][i] * det;
-						inverse[j][i] = temp * det;
-					}
-				}
-
-				return new Matrix(inverse);
+		// adjugate and determinant
+		double det = 1.0 / determinant(matrix);
+		for (int i = 0; i < inverse.length; i++) {
+			for (int j = 0; j <= i; j++) {
+				double temp = inverse[i][j];
+				inverse[i][j] = inverse[j][i] * det;
+				inverse[j][i] = temp * det;
 			}
-	
+		}
+
+		return new Matrix(inverse);
+	}
+
 	private double[][] minor(double[][] matrix, int row, int column) {
 		double[][] minor = new double[matrix.length - 1][matrix.length - 1];
 
@@ -98,7 +98,7 @@ public class Matrix {
 					minor[i < row ? i : i - 1][j < column ? j : j - 1] = matrix[i][j];
 		return minor;
 	}
-	
+
 	public double determinant(double[][] matrix) {
 		if (matrix.length != matrix[0].length)
 			throw new IllegalStateException("invalid dimensions");
@@ -112,25 +112,24 @@ public class Matrix {
 					* determinant(minor(matrix, 0, i));
 		return det;
 	}
-	
-	
+
 	public Matrix multConst(double c) {
 		double m[][] = new double[this.getNumberOfRows()][this.getNumberOfColumns()];
-		for(int i = 0; i < this.getNumberOfRows(); i++) {
-			for(int j = 0; j < this.getNumberOfColumns(); j++) {
-				m[i][j] = c*matrix[i][j];
+		for (int i = 0; i < this.getNumberOfRows(); i++) {
+			for (int j = 0; j < this.getNumberOfColumns(); j++) {
+				m[i][j] = c * matrix[i][j];
 			}
 		}
-		
+
 		return new Matrix(m);
 	}
-	
+
 	public Matrix getDiagonal() {
 		double m[][] = new double[this.getNumberOfRows()][1];
-		for(int i = 0; i < this.getNumberOfColumns(); i++) {
+		for (int i = 0; i < this.getNumberOfColumns(); i++) {
 			m[i][0] = matrix[i][i];
 		}
-		
+
 		return new Matrix(m);
 	}
 

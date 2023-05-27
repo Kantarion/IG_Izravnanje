@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +16,7 @@ public class MinimalniTrag1D {
 	private ObservableList<Visina> visine;
 	private ObservableList<VisinskaRazlika> visinske_razlike;
 	private double s0;
+	DecimalFormat df = new DecimalFormat("###.#####");
 
 	private Matrix matrica_A;
 	private Matrix matrica_P;
@@ -73,43 +75,58 @@ public class MinimalniTrag1D {
 		niz_Qll = matrica_Ql.getDiagonal().getMatrix();
 		niz_Qvv = matrica_Qv.getDiagonal().getMatrix();
 		niz_rii = matrica_r.getDiagonal().getMatrix();
+		niz_x = vektor_x.getMatrix();
 		niz_ocjenjeneVisine = ocjenjene_visine.getMatrix();
 		niz_standardnoOdstupanjeVisina = standardi_visina.getMatrix();
 
-		// Ovde napisi kod za formiranje izvjestaja
-		File izvjestaj = new File("/Users/kantarion/Desktop/proba.txt");
+		izvjestaj();
+
+	}
+
+	private void izvjestaj() {
+		int prva = niz_v.length;
+		int druga = niz_x.length;
+
+		File izvjestaj = new File("/Users/kantarion/Desktop/izvjestaj.txt");
 		try {
 			FileWriter fw = new FileWriter(izvjestaj);
 			String jed = new String("============================================================");
 			fw.write(jed);
-			fw.write("\nDatum definisu sledece tacke");
-			fw.write("\nBR. TAC. H[m]");
-			fw.write("\n1 100");
-			fw.write("\nUkupan broj tacaka koje odredjuju datum je 1");
-			fw.write("\nBroj mjerenih velicina je n=15");
-			fw.write("\nBroj nepoznatih parametara je u=10");
-			fw.write("\nsigma apriori=1000");
-			fw.write("\nsigma = 0,9500\n");
+			fw.write("\nДатум дефинишу сљедеће тачке");
+			fw.write("\nБР. ТАЧ. H[m]");
+			// fw.write("\n"+visine.get(prva).getOznaka()+" "+visine.get(prva).getVisina());
+			fw.write("\nУкупан број тачака које одређују датум је  ?");
+			fw.write("\nБрој мјерених величина је n=" + visinske_razlike.size());
+			fw.write("\nБрој непознатих параметара је ?");
+			fw.write("\nсигма априори=1000  ?");
+			fw.write("\nсигма = "+s0+"\n");
 			fw.write(jed);
-			fw.write("\nOcene dobijene iz izravnania i kriterijumi kvaliteta i tacnosti\n");
-			fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s %10s", "OD", "DO",
-					"V[mm]", "Qvii[mm2]", "loc[m]",
+			fw.write("\nОцјене добијене из изравнања и кретеријуми квалитета и тачности\n");
+			fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s %10s", "OD", "DO", "V[mm]", "Qvii[mm2]", "loc[m]",
 					"Qlii[mm2]", "rii", "u-v"));
-			for (int i = 0; i < visinske_razlike.size(); i++) {
+			for (int i = 0; i < prva; i++) {
 				fw.write("\n");
-				fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s %10s", visinske_razlike.get(i).getOd(),
-						visinske_razlike.get(i).getDo(), niz_v[i], niz_Qvv[i], niz_loc[i],
-						niz_Qll[i], niz_rii[i], niz_x[i]));
-				System.out.println(visinske_razlike.get(i).toString());
+				fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s",
+				visinske_razlike.get(i).getOd(),
+				visinske_razlike.get(i).getDo(), df.format(niz_v[i][0]),
+				df.format(niz_Qvv[i][0]), df.format(niz_loc[i][0]),df.format(niz_Qll[i][0]),
+				df.format(niz_rii[i][0])));
+			}
+			fw.write("\n" + jed + "\nУсвојени ниво значајности је:0,05\n" + "Глобални тест адекватности модела \n"
+					+ "Вриједност теста нулте хипотезе је:1.2341\n" + "Дозвољена вриједност јеч: 3.0798\n"
+					+ "Сумаrii=10,0000\n" + jed + " \n" + "ОЦЈЕНЕ НЕПОЗНАТИХ ПАРАМЕТАРА СА ОЦЈЕНОМ ТАЧНОСТИ \n" + "");
+			fw.write(String.format("%1s %10s %10s %12s", "Бр.тачке", "x[mm]", "X[m]", "mx[mm]"));
+			for (int i = 0; i < druga; i++) {
+				fw.write("\n");
+				fw.write(String.format("%1s %10s %10s %12s", visine.get(i).getOznaka(), df.format(niz_x[i][0]),
+						df.format(niz_ocjenjeneVisine[i][0]), df.format(niz_standardnoOdstupanjeVisina[i][0])));
 			}
 			fw.close();
 		} catch (IOException e) {
 			System.out.println("ne ide");
 			e.printStackTrace();
 		}
-		// https://genuinecoder.com/save-files-javafx-filechooser/
 
-		// first check if Desktop is supported by Platform or not
 		if (!Desktop.isDesktopSupported()) {
 			System.out.println("Desktop is not supported");
 			return;
@@ -132,6 +149,7 @@ public class MinimalniTrag1D {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 	}
 
 	private void izracunajPriblizneVisine() {
@@ -299,6 +317,9 @@ public class MinimalniTrag1D {
 		}
 
 		matrica_Qx = new Matrix(niz_Qx);
+		System.out.println(matrica_Qx.getMatrix());
+		System.out.println(Qx_prosireno.getMatrix());
+
 	}
 
 	private void izracunajVektorx() {
@@ -307,7 +328,6 @@ public class MinimalniTrag1D {
 
 	private void izracunajVektorv() {
 		vektor_v = (matrica_A.multiply(vektor_x)).add(vektor_f);
-		System.out.println(vektor_v);
 	}
 
 	private void izracunajStandardnoOdstupanje() {
@@ -327,7 +347,7 @@ public class MinimalniTrag1D {
 
 	private void izracunajMatricuQv() {
 		Matrix P_inverzno = matrica_P.inverse();
-		matrica_Qv = P_inverzno.subtract(matrica_Ql);
+		matrica_Qv = matrica_Ql.subtract(P_inverzno);
 	}
 
 	private void izracunajMatricur() {
