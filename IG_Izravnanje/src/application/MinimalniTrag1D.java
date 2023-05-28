@@ -6,6 +6,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.*;
+
+import application.Tabela.Block;
+import application.Tabela.Board;
+import application.Tabela.Table;
+
+import java.nio.file.Files;
+import java.io.PrintWriter;
+import java.nio.file.Paths;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
@@ -80,7 +93,81 @@ public class MinimalniTrag1D {
 		niz_ocjenjeneVisine = ocjenjene_visine.getMatrix();
 		niz_standardnoOdstupanjeVisina = standardi_visina.getMatrix();
 
+		try {
+			proba();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		izvjestaj();
+
+	}
+
+	public void proba() throws IOException {
+		File proba = new File("/Users/kantarion/Desktop/proba.txt");
+
+		List<List<String>> lista = new ArrayList<>();
+		List<String> red = new ArrayList<>();
+		for (int i = 0; i < niz_v.length; i++) {
+			red.add(visinske_razlike.get(i).getOd());
+			red.add(visinske_razlike.get(i).getDo());
+			red.add(df.format(niz_v[i][0]));
+			red.add(df.format(niz_Qvv[i][0]));
+			red.add(df.format(niz_loc[i][0]));
+			red.add(df.format(niz_Qll[i][0]));
+			red.add(df.format(niz_rii[i][0]));
+			if (i % 1 == 0) { // Ako je svaki treći element, dodaj red u listu i stvori novi red
+				lista.add(red);
+				red = new ArrayList<>();
+			}
+		}
+
+		// Dodavanje posljednjeg reda ako je potrebno
+		if (!red.isEmpty()) {
+			lista.add(red);
+		}
+		List<String> header = Arrays.asList("OD", "DO", "V", "Qvii", "loc", "Qlii", "rii");
+		Board board = new Board(100);
+		Table table = new Table(board, 20, header, lista);
+		List<Integer> colWidthsList = Arrays.asList(10, 10, 10, 10, 10, 10, 10);
+		table.setColWidthsList(colWidthsList);
+		Block tableBlock = table.tableToBlocks();
+		board.setInitialBlock(tableBlock);
+		board.build();
+		String preview1 = board.getPreview();
+
+		System.out.println(preview1);
+
+		File izvjestaj = new File("/Users/kantarion/Desktop/proba.txt");
+		FileWriter fw = new FileWriter(izvjestaj);
+		fw.write(preview1);
+		fw.close();
+
+		// OTVARANJE DATOTEKE
+
+		// first check if Desktop is supported by Platform or not
+		if (!Desktop.isDesktopSupported()) {
+			System.out.println("Desktop is not supported");
+			return;
+		}
+
+		Desktop desktop = Desktop.getDesktop();
+		if (izvjestaj.exists())
+			try {
+				desktop.open(izvjestaj);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		// let's try to open PDF file
+		if (izvjestaj.exists())
+			try {
+				desktop.open(izvjestaj);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 	}
 
@@ -210,7 +297,6 @@ public class MinimalniTrag1D {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 
 	}
 
