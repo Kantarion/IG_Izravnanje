@@ -99,48 +99,91 @@ public class MinimalniTrag1D {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		izvjestaj();
+		// izvjestaj();
 
 	}
 
 	public void proba() throws IOException {
+		FileChooser fileChooser = new FileChooser();
+
+		FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+		fileChooser.getExtensionFilters().add(extensionFilter);
 		File proba = new File("/Users/kantarion/Desktop/proba.txt");
 
-		List<List<String>> lista = new ArrayList<>();
-		List<String> red = new ArrayList<>();
+		List<List<String>> lista1 = new ArrayList<>();
+		List<String> red1 = new ArrayList<>();
 		for (int i = 0; i < niz_v.length; i++) {
-			red.add(visinske_razlike.get(i).getOd());
-			red.add(visinske_razlike.get(i).getDo());
-			red.add(df.format(niz_v[i][0]));
-			red.add(df.format(niz_Qvv[i][0]));
-			red.add(df.format(niz_loc[i][0]));
-			red.add(df.format(niz_Qll[i][0]));
-			red.add(df.format(niz_rii[i][0]));
+			red1.add(visinske_razlike.get(i).getOd());
+			red1.add(visinske_razlike.get(i).getDo());
+			red1.add(df.format(niz_v[i][0]));
+			red1.add(df.format(niz_Qvv[i][0]));
+			red1.add(df.format(niz_loc[i][0]));
+			red1.add(df.format(niz_Qll[i][0]));
+			red1.add(df.format(niz_rii[i][0]));
 			if (i % 1 == 0) { // Ako je svaki treći element, dodaj red u listu i stvori novi red
-				lista.add(red);
-				red = new ArrayList<>();
+				lista1.add(red1);
+				red1 = new ArrayList<>();
 			}
 		}
 
 		// Dodavanje posljednjeg reda ako je potrebno
-		if (!red.isEmpty()) {
-			lista.add(red);
+		if (!red1.isEmpty()) {
+			lista1.add(red1);
 		}
-		List<String> header = Arrays.asList("OD", "DO", "V", "Qvii", "loc", "Qlii", "rii");
-		Board board = new Board(100);
-		Table table = new Table(board, 20, header, lista);
-		List<Integer> colWidthsList = Arrays.asList(10, 10, 10, 10, 10, 10, 10);
-		table.setColWidthsList(colWidthsList);
-		Block tableBlock = table.tableToBlocks();
-		board.setInitialBlock(tableBlock);
-		board.build();
-		String preview1 = board.getPreview();
-
-		System.out.println(preview1);
 
 		File izvjestaj = new File("/Users/kantarion/Desktop/proba.txt");
 		FileWriter fw = new FileWriter(izvjestaj);
-		fw.write(preview1);
+		String jed = new String(
+				"==================================================================================");
+
+		List<String> header1 = Arrays.asList("OD", "DO", "V[mm]", "Qvii[mm2]", "loc[m]", "Qlii[mm2]", "rii");
+		Board board1 = new Board(100);
+		Table table1 = new Table(board1, 20, header1, lista1);
+		List<Integer> colWidthsList1 = Arrays.asList(10, 10, 10, 10, 10, 10, 10);
+		table1.setColWidthsList(colWidthsList1);
+		Block tableBlock1 = table1.tableToBlocks();
+		board1.setInitialBlock(tableBlock1);
+		board1.build();
+		String tabela1 = board1.getPreview();
+
+		fw.write("Datum definisu sljedece tacke\n" + "BR. TAC.  H[m]\n" + "Ukupan broj tacaka koje odredjuju datum\n"
+				+ "Broj mjerenih velicina je n= " + visinske_razlike.size() + "Broj nepoznatih parametara !"
+				+ "sigma apriori =!" + "sigma = " + s0 + "\n" + jed
+				+ "\nOcjene dobijene iz izravnanja i kreterijumi kvaliteta i tacnosti\n");
+		fw.write(tabela1);
+		fw.write("\n" + jed + "\nUsvojeni nivo znacajnosti je: \n" + "Globalni test adekvatnosti modela\n"
+				+ "Vrijednosti testa nulta hipoteze\n" + "Dozvoljena vrijednosti jednacine\n"
+				+ "Suma rii=\n" + jed + "\nOCJENE NEPOZNATIH PARAMETARA SA OCJENOM TACNOSTI\n");
+
+		List<List<String>> lista2 = new ArrayList<>();
+		List<String> red2 = new ArrayList<>();
+		for (int i = 0; i < niz_x.length; i++) {
+			red2.add(visine.get(i).getOznaka());
+			red2.add(df.format(niz_x[i][0]));
+			red2.add(df.format(niz_ocjenjeneVisine[i][0]));
+			red2.add(df.format(niz_standardnoOdstupanjeVisina[i][0]));
+			if (i % 1 == 0) { // Ako je svaki treći element, dodaj red u listu i stvori novi red
+				lista2.add(red2);
+				red2 = new ArrayList<>();
+			}
+		}
+
+		// Dodavanje posljednjeg reda ako je potrebno
+		if (!red2.isEmpty()) {
+			lista2.add(red2);
+		}
+
+		List<String> header2 = Arrays.asList("BR.TACKE", "x[mm]", "X[m]", "mx[mm]");
+		Board board2 = new Board(100);
+		Table table2 = new Table(board2, 20, header2, lista2);
+		List<Integer> colWidthsList2 = Arrays.asList(10, 10, 10, 10);
+		table2.setColWidthsList(colWidthsList2);
+		Block tableBlock2 = table2.tableToBlocks();
+		board2.setInitialBlock(tableBlock2);
+		board2.build();
+		String tabela2 = board2.getPreview();
+
+		fw.write(tabela2);
 		fw.close();
 
 		// OTVARANJE DATOTEKE
@@ -185,7 +228,8 @@ public class MinimalniTrag1D {
 		if (file != null) {
 			try {
 				FileWriter fw = new FileWriter(file);
-				String jed = new String("============================================================");
+				String jed = new String(
+						"==================================================================================");
 				fw.write(jed);
 				fw.write("\nДатум дефинишу сљедеће тачке");
 				fw.write("\nБР. ТАЧ. H[m]");
@@ -202,11 +246,11 @@ public class MinimalniTrag1D {
 						"Qlii[mm2]", "rii", "u-v"));
 				for (int i = 0; i < prva; i++) {
 					fw.write("\n");
-					fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s",
+					fw.write(String.format("%1s %10s %10s %12s %10s %12s %10s %12s",
 							visinske_razlike.get(i).getOd(),
 							visinske_razlike.get(i).getDo(), df.format(niz_v[i][0]),
 							df.format(niz_Qvv[i][0]), df.format(niz_loc[i][0]), df.format(niz_Qll[i][0]),
-							df.format(niz_rii[i][0])));
+							df.format(niz_rii[i][0]), "0,00000"));
 				}
 				fw.write("\n" + jed + "\nУсвојени ниво значајности је:0,05\n" + "Глобални тест адекватности модела \n"
 						+ "Вриједност теста нулте хипотезе је:1.2341\n" + "Дозвољена вриједност јеч: 3.0798\n"
@@ -215,7 +259,7 @@ public class MinimalniTrag1D {
 				fw.write(String.format("%1s %10s %10s %12s", "Бр.тачке", "x[mm]", "X[m]", "mx[mm]"));
 				for (int i = 0; i < druga; i++) {
 					fw.write("\n");
-					fw.write(String.format("%1s %10s %10s %12s", visine.get(i).getOznaka(), df.format(niz_x[i][0]),
+					fw.write(String.format("%1s %15s %15s %12s", visine.get(i).getOznaka(), df.format(niz_x[i][0]),
 							df.format(niz_ocjenjeneVisine[i][0]), df.format(niz_standardnoOdstupanjeVisina[i][0])));
 				}
 				fw.close();
