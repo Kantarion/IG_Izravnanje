@@ -103,12 +103,21 @@ public class MinimalniTrag1D {
 
 	}
 
+
+	// ispisivanje u txt u obliku tabele
 	public void proba() throws IOException {
 		FileChooser fileChooser = new FileChooser();
 
 		FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
 		fileChooser.getExtensionFilters().add(extensionFilter);
-		File proba = new File("/Users/kantarion/Desktop/proba.txt");
+
+		// za provjere 
+		// File proba = new File("/Users/kantarion/Desktop/proba.txt");
+
+
+		// krajnji kod sa prozorom za cuvanje
+		File izvjestaj = fileChooser.showSaveDialog(null);
+
 
 		List<List<String>> lista1 = new ArrayList<>();
 		List<String> red1 = new ArrayList<>();
@@ -131,7 +140,6 @@ public class MinimalniTrag1D {
 			lista1.add(red1);
 		}
 
-		File izvjestaj = new File("/Users/kantarion/Desktop/proba.txt");
 		FileWriter fw = new FileWriter(izvjestaj);
 		String jed = new String(
 				"==================================================================================");
@@ -214,6 +222,8 @@ public class MinimalniTrag1D {
 
 	}
 
+
+	// ispisivanje u txt klasicno sa namjestanjem piksela
 	private void izvjestaj() {
 		int prva = niz_v.length;
 		int druga = niz_x.length;
