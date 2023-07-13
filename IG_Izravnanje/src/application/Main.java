@@ -1,16 +1,14 @@
 package application;
-	
+
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.scene.control.TableRow;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-
 
 public class Main extends Application {
 	@Override
@@ -21,12 +19,15 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
+
 }

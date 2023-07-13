@@ -22,12 +22,28 @@ public class Visina {
 		return visina.get();
 	}
 	
-	public void setVisina(String visina) {
-		this.visina = new SimpleStringProperty(visina);
-	}
+
 	
 	public boolean definiseDatum() {
 		return definise_datum;
 	}
+
+	public void setOznaka(String oznaka) {
+		this.oznaka.set(oznaka);
+	}
+
+	public void setVisina(String visina) {
+		this.visina.set(visina);
+	}
+
+	public void setDefinise_datum(boolean definise_datum) {
+		this.definise_datum = definise_datum;
+	}
+
+	public boolean isDefinise_datum() {
+		return definise_datum;
+	}
+
+	
 	
 }

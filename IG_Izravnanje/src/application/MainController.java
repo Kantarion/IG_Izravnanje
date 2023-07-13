@@ -1,23 +1,25 @@
 package application;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Random;
-import java.util.ResourceBundle;
 
-import javax.print.DocFlavor.URL;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 public class MainController {
 
@@ -72,6 +74,54 @@ public class MainController {
 	@FXML
 	public TableColumn VISINA;
 
+	int redVR;
+	int redV;
+
+	public void initialize() {
+		// Dodavanje dvoklika na tablicu
+		klikTabelaVR();
+		klikTabelaVisina();
+	}
+
+	public void klikTabelaVR(){
+		tabela_vr.setRowFactory(tv -> {
+			TableRow<VisinskaRazlika> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !row.isEmpty()) {
+					VisinskaRazlika rowData = row.getItem();
+					otvoriDijalogZaUredivanjeVR(rowData);
+				}
+				redVR = row.getIndex() + 1;
+			});
+			return row;
+		});
+	}
+
+
+	public void klikTabelaVisina() {
+		tabela_v.setRowFactory(tv -> {
+			TableRow<Visina> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !row.isEmpty()) {
+					Visina rowData = row.getItem();
+					otvoriDijalogZaUredivanjeV(rowData);
+				}
+				redV = row.getIndex() + 1;
+			});
+
+			row.itemProperty().addListener((obs, oldVal, newVal) -> {
+				if (newVal != null) {
+					if (newVal.definiseDatum()) { // Prilagodite s atributom koji provjeravate
+						row.getStyleClass().add("table-row-true");
+					} else {
+						row.getStyleClass().remove("table-row-true");
+					}
+				}
+			});
+			return row;
+		});
+	}
+
 	public void ucitaj(ActionEvent event) {
 		OD.setCellValueFactory(new PropertyValueFactory<>("Od"));
 		DO.setCellValueFactory(new PropertyValueFactory<>("Do"));
@@ -101,7 +151,7 @@ public class MainController {
 
 		OZNAKA.setCellValueFactory(new PropertyValueFactory<>("oznaka"));
 		VISINA.setCellValueFactory(new PropertyValueFactory<>("visina"));
-		
+
 		data_v.add(visina = new Visina("1", "100", true));
 		data_v.add(visina = new Visina("2", "", false));
 		data_v.add(visina = new Visina("3", "", false));
@@ -152,6 +202,131 @@ public class MainController {
 		if (radio_minimalanTrag.isSelected()) {
 			mt.napraviIzvjestaj();
 		}
+	}
+
+	public void otvoriDijalogZaUredivanjeVR(VisinskaRazlika odabranaVR) {
+		Dialog<Boolean> dialog = new Dialog<>();
+		dialog.setTitle("Uredi visinsku razliku: " + redVR);
+
+		// Kreirajte polja za unos atributa
+		TextField odField = new TextField();
+		odField.setText(odabranaVR.getOd());
+		TextField doField = new TextField();
+		doField.setText(odabranaVR.getDo());
+		TextField vrField = new TextField();
+		vrField.setText(odabranaVR.getVisinskaRaz());
+		TextField DField = new TextField();
+		DField.setText(odabranaVR.getDuzinaStrane());
+		TextField BSField = new TextField();
+		BSField.setText(odabranaVR.getBrojStanica());
+
+		// Kreirajte višeslojni raspored za elemente
+		GridPane gridPane = new GridPane();
+		gridPane.setHgap(10);
+		gridPane.setVgap(10);
+		gridPane.addRow(0, new Label("Od:"), odField);
+		gridPane.addRow(1, new Label("Do:"), doField);
+		gridPane.addRow(2, new Label("Visinska Razlika:"), vrField);
+		gridPane.addRow(3, new Label("Duzina Strane:"), DField);
+		gridPane.addRow(4, new Label("Broj Stanica:"), BSField);
+
+		// Dodajte raspored u dijalog
+		VBox content = new VBox(gridPane);
+		dialog.getDialogPane().setContent(content);
+
+		// Dodajte gumb "Potvrdi" u dijalog
+		ButtonType potvrdiButton = new ButtonType("Potvrdi", ButtonBar.ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(potvrdiButton, ButtonType.CANCEL);
+
+		// Obrada potvrde gumba
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == potvrdiButton) {
+				odabranaVR.setOd(odField.getText());
+				odabranaVR.setDo(doField.getText());
+				odabranaVR.setVisinskaRaz(vrField.getText());
+				odabranaVR.setDuzinaStrane(DField.getText());
+				odabranaVR.setBrojStanica(BSField.getText());
+
+				return true;
+			}
+			return false;
+		});
+
+		// Prikaži dijalog i obradi rezultat
+		dialog.showAndWait().ifPresent(result -> {
+			if (result) {
+				tabela_vr.refresh(); // Osvježi prikaz tablice
+			}
+		});
+	}
+
+	/**
+	 * @param odabranaV
+	 */
+	public void otvoriDijalogZaUredivanjeV(Visina odabranaV) {
+		Dialog<Boolean> dialog = new Dialog<>();
+		dialog.setTitle("Uredi visinsku razliku: " + redV);
+
+		// Kreirajte polja za unos atributa
+		TextField OzField = new TextField();
+		OzField.setText(odabranaV.getOznaka());
+		TextField VField = new TextField();
+		VField.setText(odabranaV.getVisina());
+		RadioButton radioButtonDa = new RadioButton("Da");
+		RadioButton radioButtonNe = new RadioButton("Ne");
+
+		if (odabranaV.definiseDatum()) {
+			radioButtonDa.setSelected(true);
+			radioButtonNe.setSelected(false);
+		} else {
+			radioButtonDa.setSelected(false);
+			radioButtonNe.setSelected(true);
+		}
+
+		// Kreirajte višeslojni raspored za elemente
+		GridPane gridPane = new GridPane();
+		gridPane.setHgap(10);
+		gridPane.setVgap(10);
+		gridPane.addRow(0, new Label("Oznaka:"), OzField);
+		gridPane.addRow(1, new Label("Visina:"), VField);
+		gridPane.addRow(2, new Label("Definise Datum:"));
+		gridPane.addRow(3, radioButtonDa, radioButtonNe);
+
+		ToggleGroup radioGroup = new ToggleGroup();
+		radioButtonDa.setToggleGroup(radioGroup);
+		radioButtonNe.setToggleGroup(radioGroup);
+
+		// Dodajte raspored u dijalog
+		VBox content = new VBox(gridPane);
+		dialog.getDialogPane().setContent(content);
+
+		// Dodajte gumb "Potvrdi" u dijalog
+		ButtonType potvrdiButton = new ButtonType("Potvrdi", ButtonBar.ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(potvrdiButton, ButtonType.CANCEL);
+
+		// Obrada potvrde gumba
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == potvrdiButton) {
+				odabranaV.setOznaka(OzField.getText());
+				odabranaV.setVisina(VField.getText());
+				Boolean datum;
+				if (radioButtonDa.isSelected()) {
+					datum = true;
+				} else {
+					datum = false;
+				}
+				odabranaV.setDefinise_datum(datum);
+				return true;
+			}
+			return false;
+		});
+
+		// Prikaži dijalog i obradi rezultat
+		dialog.showAndWait().ifPresent(result -> {
+			if (result) {
+				tabela_v.refresh(); // Osvježi prikaz tablice
+			}
+		});
 	}
 
 }
